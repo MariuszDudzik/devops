@@ -20,3 +20,10 @@ docker pull tronmariuszdudzik/lab_frontend:latest
 
 docker run -d --name backend --network lab-network tronmariuszdudzik/lab_backend:latest
 docker run -d --name frontend --network lab-network -p 8080:80 tronmariuszdudzik/lab_frontend:latest
+
+
+curl http://localhost:8080/
+curl http://localhost:8080/products.html
+curl http://localhost:8080/stats.html
+curl http://localhost:8080/api/items
+curl http://localhost:8080/api/stats -i
