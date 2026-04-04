@@ -1,0 +1,22 @@
+docker login
+docker network create lab-network
+
+docker build -t tronmariuszdudzik/lab_backend:v1 ./backend
+docker tag tronmariuszdudzik/lab_backend:v1 tronmariuszdudzik/lab_backend:latest
+
+docker build -t tronmariuszdudzik/lab_frontend:v1 ./frontend
+docker tag tronmariuszdudzik/lab_frontend:v1 tronmariuszdudzik/lab_frontend:latest
+
+docker push tronmariuszdudzik/lab_backend:v1
+docker push tronmariuszdudzik/lab_backend:latest
+docker push tronmariuszdudzik/lab_frontend:v1
+docker push tronmariuszdudzik/lab_frontend:latest
+
+docker rmi tronmariuszdudzik/lab_backend:v1 tronmariuszdudzik/lab_backend:latest
+docker rmi tronmariuszdudzik/lab_frontend:v1 tronmariuszdudzik/lab_frontend:latest
+
+docker pull tronmariuszdudzik/lab_backend:latest
+docker pull tronmariuszdudzik/lab_frontend:latest
+
+docker run -d --name backend --network lab-network tronmariuszdudzik/lab_backend:latest
+docker run -d --name frontend --network lab-network -p 8080:80 tronmariuszdudzik/lab_frontend:latest
