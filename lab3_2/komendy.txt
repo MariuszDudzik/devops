@@ -1,0 +1,55 @@
+docker login
+docker network create lab-network
+
+docker build -t tronmariuszdudzik/lab_backend:v1 ./backend
+docker tag tronmariuszdudzik/lab_backend:v1 tronmariuszdudzik/lab_backend:latest
+
+docker build -t tronmariuszdudzik/lab_frontend:v1 ./frontend
+docker tag tronmariuszdudzik/lab_frontend:v1 tronmariuszdudzik/lab_frontend:latest
+
+docker push tronmariuszdudzik/lab_backend:v1
+docker push tronmariuszdudzik/lab_backend:latest
+docker push tronmariuszdudzik/lab_frontend:v1
+docker push tronmariuszdudzik/lab_frontend:latest
+
+docker rmi tronmariuszdudzik/lab_backend:v1 tronmariuszdudzik/lab_backend:latest
+docker rmi tronmariuszdudzik/lab_frontend:v1 tronmariuszdudzik/lab_frontend:latest
+
+docker pull tronmariuszdudzik/lab_backend:latest
+docker pull tronmariuszdudzik/lab_frontend:latest
+
+docker run -d --name backend --network lab-network tronmariuszdudzik/lab_backend:latest
+docker run -d --name frontend --network lab-network -p 8080:80 tronmariuszdudzik/lab_frontend:latest
+
+
+curl http://localhost:8080/
+curl http://localhost:8080/products.html
+curl http://localhost:8080/stats.html
+curl http://localhost:8080/api/items
+curl http://localhost:8080/api/stats -i
+
+
+Komendy dla LAB3_2
+
+docker stop frontend
+docker rm frontend
+docker rmi tronmariuszdudzik/lab_frontend:v2
+docker build -t tronmariuszdudzik/lab_frontend:v2 ./frontend
+docker tag tronmariuszdudzik/lab_frontend:v2 tronmariuszdudzik/lab_frontend:latest
+docker push tronmariuszdudzik/lab_frontend:v2
+docker push tronmariuszdudzik/lab_frontend:latest
+
+docker rm -f api-a api-b
+docker rmi tronmariuszdudzik/lab_backend:v2
+docker build -t tronmariuszdudzik/lab_backend:v2 ./backend
+docker tag tronmariuszdudzik/lab_backend:v2 tronmariuszdudzik/lab_backend:latest
+docker push tronmariuszdudzik/lab_backend:v2
+docker push tronmariuszdudzik/lab_backend:latest
+
+docker run -d --name api-a --network lab-network -e INSTANCE_ID=api-a tronmariuszdudzik/lab_backend:latest
+
+docker run -d --name api-b --network lab-network -e INSTANCE_ID=api-b tronmariuszdudzik/lab_backend:latest
+
+docker run -d --name frontend --network lab-network -p 8080:80 tronmariuszdudzik/lab_frontend:latest
+
+curl http://localhost:8080/api/stats
