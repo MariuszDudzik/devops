@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Statystyki - Zarządzanie magazynem</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>Zarządzanie magazynem</h1>
+  <nav>
+    <a href="/index.html">Start</a>
+    <a href="/products.html">Produkty</a>
+    <a href="/stats.html">Statystyki</a>
+  </nav>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h2>Statystyki aplikacji</h2>
+    <div id="stats"></div>
+  </div>
+
+</div>
+
+<script>
+fetch('/api/stats')
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('stats').innerHTML = `
+      <p><b>Łączna liczba produktów:</b> ${data.count}</p>
+      <p><b>ID instancji backendu:</b> ${data.instance}</p>
+    `;
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+docker login
+docker network create lab-network
+
+docker build --build-arg IMAGE_VERSION=v3 -t tronmariuszdudzik/lab_backend:v3 ./backend
+docker tag tronmariuszdudzik/lab_backend:v3 tronmariuszdudzik/lab_backend:latest
+docker push tronmariuszdudzik/lab_backend:v3
+docker push tronmariuszdudzik/lab_backend:latest
+
+docker build --build-arg NGINX_VERSION=1.29 -t tronmariuszdudzik/lab_frontend:v3 ./frontend
+docker tag tronmariuszdudzik/lab_frontend:v3 tronmariuszdudzik/lab_frontend:latest
+docker push tronmariuszdudzik/lab_frontend:v3
+docker push tronmariuszdudzik/lab_frontend:latest
+
+docker rm -f frontend api-a api-b
+
+docker rmi tronmariuszdudzik/lab_backend:v3 tronmariuszdudzik/lab_backend:latest
+docker rmi tronmariuszdudzik/lab_frontend:v3 tronmariuszdudzik/lab_frontend:latest
+
+docker pull tronmariuszdudzik/lab_backend:v3
+docker pull tronmariuszdudzik/lab_frontend:v3
+
+docker run -d --name api-a --network lab-network -e INSTANCE_ID=api-a tronmariuszdudzik/lab_backend:v3
+docker run -d --name api-b --network lab-network -e INSTANCE_ID=api-b tronmariuszdudzik/lab_backend:v3
+
+docker run -d --name frontend --network lab-network -p 8080:80 tronmariuszdudzik/lab_frontend:v3
+
