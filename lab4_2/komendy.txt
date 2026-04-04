@@ -1,0 +1,11 @@
+docker build --build-arg IMAGE_VERSION=v3 -t tronmariuszdudzik/lab_backend:v3 ./backend
+
+
+npm install
+docker build --build-arg IMAGE_VERSION=v3 -t tronmariuszdudzik/lab_backend:v3 ./backend
+
+docker pull node:20
+docker pull node:20-alpine
+docker images | findstr "node"
+
+docker scout cves tronmariuszdudzik/lab_backend:v3
