@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Produkty - Zarządzanie magazynem</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>Zarządzanie magazynem</h1>
+  <nav>
+    <a href="/index.html">Start</a>
+    <a href="/products.html">Produkty</a>
+    <a href="/stats.html">Statystyki</a>
+  </nav>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h2>Lista produktów</h2>
+    <ul id="productList"></ul>
+  </div>
+
+  <div class="card">
+    <h2>Dodaj produkt</h2>
+    <form id="productForm">
+      <input type="text" id="name" placeholder="Nazwa produktu" required>
+      <button type="submit">Dodaj</button>
+    </form>
+  </div>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

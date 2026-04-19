@@ -1,0 +1,38 @@
+docker network create front-net
+docker network create back-net
+docker volume create items-data
+
+docker build --build-arg IMAGE_VERSION=v4 -t tronmariuszdudzik/lab_backend:v4 ./backend
+docker tag tronmariuszdudzik/lab_backend:v4 tronmariuszdudzik/lab_backend:latest
+docker build --build-arg IMAGE_VERSION=v4 -t tronmariuszdudzik/lab_frontend:v4 ./frontend
+docker tag tronmariuszdudzik/lab_frontend:v4 tronmariuszdudzik/lab_frontend:latest
+
+docker push tronmariuszdudzik/lab_backend:v4
+docker push tronmariuszdudzik/lab_frontend:v4
+docker push tronmariuszdudzik/lab_backend:latest
+docker push tronmariuszdudzik/lab_frontend:latest
+
+docker rmi tronmariuszdudzik/lab_backend:v4 tronmariuszdudzik/lab_backend:latest
+docker rmi tronmariuszdudzik/lab_frontend:v4 tronmariuszdudzik/lab_frontend:latest
+
+docker pull tronmariuszdudzik/lab_backend:v4
+docker pull tronmariuszdudzik/lab_frontend:v4
+
+docker run -d --name api-a --network back-net -v items-data:/data -e INSTANCE_ID=api-a tronmariuszdudzik/lab_backend:v4
+docker run -d --name api-b --network back-net -v items-data:/data -e INSTANCE_ID=api-b tronmariuszdudzik/lab_backend:v4
+
+docker run -d --name frontend --network front-net -p 80:80 tronmariuszdudzik/lab_frontend:v4
+docker network connect back-net frontend
+
+docker inspect frontend
+docker inspect api-a
+docker logs api-a
+docker logs api-b
+docker run --rm --network front-net alpine ping -c 3 api-a
+
+
+curl http://localhost/api/items
+curl http://localhost/api/stats
+
+
+
