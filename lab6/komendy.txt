@@ -1,0 +1,29 @@
+
+docker compose up -d --build
+docker compose ps
+
+curl -s -X POST http://localhost/api/items -H "Content-Type: application/json" -d '{"name":"TestPersistencji","price":99.99}'
+
+
+docker compose down
+
+docker compose up -d
+
+curl -s http://localhost/api/items
+
+curl -s http://localhost/api/items
+curl -s http://localhost/api/items
+
+curl -s http://localhost/api/stats
+
+docker compose --profile tools run --rm db-seed
+
+curl -s http://localhost/api/items
+
+
+docker compose -f compose.yml config | grep -A5 volumes
+
+docker compose config | grep -A5 volumes
+
+curl http://localhost:3000/health
+curl http://localhost/api/health

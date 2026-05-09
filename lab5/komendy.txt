@@ -1,3 +1,4 @@
+docker login
 docker network create front-net
 docker network create back-net
 docker volume create items-data
@@ -28,7 +29,7 @@ docker inspect frontend
 docker inspect api-a
 docker logs api-a
 docker logs api-b
-docker run --rm --network front-net alpine ping -c 3 api-a
+
 
 
 curl http://localhost/api/items
