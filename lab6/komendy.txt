@@ -2,7 +2,9 @@
 docker compose up -d --build
 docker compose ps
 
-curl -s -X POST http://localhost/api/items -H "Content-Type: application/json" -d '{"name":"TestPersistencji","price":99.99}'
+curl.exe -s -X POST http://localhost/api/items ^
+  -H "Content-Type: application/json" ^
+  -d "{\"name\":\"TestPersistencji\",\"price\":99.99}"
 
 
 docker compose down
@@ -21,9 +23,8 @@ docker compose --profile tools run --rm db-seed
 curl -s http://localhost/api/items
 
 
-docker compose -f compose.yml config | grep -A5 volumes
-
-docker compose config | grep -A5 volumes
+docker compose -f compose.yml config > out.txt
+findstr volumes out.txt
 
 curl http://localhost:3000/health
 curl http://localhost/api/health

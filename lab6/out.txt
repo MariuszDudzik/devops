@@ -1,0 +1,98 @@
+name: lab6
+services:
+  backend:
+    build:
+      context: C:\devops\lab6\backend
+      dockerfile: Dockerfile
+    depends_on:
+      cache:
+        condition: service_healthy
+        required: true
+      db:
+        condition: service_healthy
+        required: true
+    environment:
+      INSTANCE_ID: backend-1
+      POSTGRES_DB: laborka
+      POSTGRES_HOST: db
+      POSTGRES_PASSWORD: test!
+      POSTGRES_USER: mariusz
+      REDIS_HOST: cache
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - -qO-
+        - http://localhost:3000/health
+      timeout: 5s
+      interval: 10s
+      retries: 5
+      start_period: 10s
+    networks:
+      back-net: null
+    restart: unless-stopped
+  cache:
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - ping
+      timeout: 5s
+      interval: 10s
+      retries: 3
+      start_period: 5s
+    image: redis:7-alpine
+    networks:
+      back-net: null
+    restart: unless-stopped
+  db:
+    environment:
+      POSTGRES_DB: laborka
+      POSTGRES_PASSWORD: test!
+      POSTGRES_USER: mariusz
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U mariusz -d laborka
+      timeout: 5s
+      interval: 10s
+      retries: 5
+      start_period: 15s
+    image: postgres:16-alpine
+    networks:
+      back-net: null
+    restart: unless-stopped
+    volumes:
+      - type: volume
+        source: pg-data
+        target: /var/lib/postgresql/data
+        volume: {}
+  nginx:
+    build:
+      context: C:\devops\lab6\frontend
+      dockerfile: Dockerfile
+      args:
+        NGINX_VERSION: "1.29"
+    depends_on:
+      backend:
+        condition: service_healthy
+        required: true
+    networks:
+      back-net: null
+      front-net: null
+    ports:
+      - mode: ingress
+        target: 80
+        published: "80"
+        protocol: tcp
+    restart: unless-stopped
+networks:
+  back-net:
+    name: lab6_back-net
+    driver: bridge
+  front-net:
+    name: lab6_front-net
+    driver: bridge
+volumes:
+  pg-data:
+    name: lab6_pg-data
